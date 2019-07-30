@@ -14,6 +14,9 @@ np.random.seed(1) #设置一个固定的随机种子，以保证接下来的步�
 
 X, Y = load_planar_dataset()
 #plt.scatter(X[0, :], X[1, :], c=Y, s=40, cmap=plt.cm.Spectral) #绘制散点图
+test_squeeze = np.squeeze(Y)
+plt.scatter(X[0, :], X[1, :], c=np.squeeze(Y), s=40, cmap=plt.cm.Spectral) #绘制散点图
+plt.show()
 shape_X = X.shape
 shape_Y = Y.shape
 m = Y.shape[1]  # 训练集里面的数量
@@ -247,6 +250,7 @@ parameters = nn_model(X, Y, n_h = 4, num_iterations=10000, print_cost=True)
 #绘制边界
 plot_decision_boundary(lambda x: predict(parameters, x.T), X, Y)
 plt.title("Decision Boundary for hidden layer size " + str(4))
+plt.show()
 
 predictions = predict(parameters, X)
 print ('准确率: %d' % float((np.dot(Y, predictions.T) + np.dot(1 - Y, 1 - predictions.T)) / float(Y.size) * 100) + '%')

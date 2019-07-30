@@ -11,8 +11,15 @@ train_set_x_orig , train_set_y , test_set_x_orig , test_set_y , classes = load_d
 
 # 查看第25张图片
 index = 25
-plt.imshow(train_set_x_orig[index])
-plt.show()
+# a = train_set_x_orig[index]
+# plt.imshow(train_set_x_orig[index])
+# plt.show()
+
+#打印出当前的训练标签值
+#使用np.squeeze的目的是压缩维度，【未压缩】train_set_y[:,index]的值为[1] , 【压缩后】np.squeeze(train_set_y[:,index])的值为1
+#print("【使用np.squeeze：" + str(np.squeeze(train_set_y[:,index])) + "，不使用np.squeeze： " + str(train_set_y[:,index]) + "】")
+#只有压缩后的值才能进行解码操作
+print("y=" + str(train_set_y[:,index]) + ", it's a " + classes[np.squeeze(train_set_y[:,index])].decode("utf-8") + "' picture")
 
 m_train = train_set_y.shape[1] #训练集里图片的数量。
 m_test = test_set_y.shape[1] #测试集里图片的数量。
