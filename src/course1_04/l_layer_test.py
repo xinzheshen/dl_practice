@@ -19,7 +19,7 @@ def initialize_parameters_deep(layers_dims):
     L = len(layers_dims)
 
     for l in range(1, L):
-        parameters["W" + str(l)] = np.random.randn(layers_dims[l], layers_dims[l - 1])
+        parameters["W" + str(l)] = np.random.randn(layers_dims[l], layers_dims[l - 1]) / np.sqrt(layers_dims[l - 1])
         parameters["b" + str(l)] = np.zeros((layers_dims[l], 1))
 
         # 确保数据格式是对的
@@ -137,10 +137,10 @@ def compute_cost(AL,Y):
     return cost
 
 
-#测试compute_cost
-print("==============测试compute_cost==============")
-Y,AL = testCases.compute_cost_test_case()
-print("cost = " + str(compute_cost(AL, Y)))
+# #测试compute_cost
+# print("==============测试compute_cost==============")
+# Y,AL = testCases.compute_cost_test_case()
+# print("cost = " + str(compute_cost(AL, Y)))
 
 
 def linear_backward(dZ,cache):
@@ -286,15 +286,15 @@ def update_parameters(parameters, grads, learning_rate):
     return parameters
 
 
-#测试update_parameters
-print("==============测试update_parameters==============")
-parameters, grads = testCases.update_parameters_test_case()
-parameters = update_parameters(parameters, grads, 0.1)
-
-print ("W1 = "+ str(parameters["W1"]))
-print ("b1 = "+ str(parameters["b1"]))
-print ("W2 = "+ str(parameters["W2"]))
-print ("b2 = "+ str(parameters["b2"]))
+# #测试update_parameters
+# print("==============测试update_parameters==============")
+# parameters, grads = testCases.update_parameters_test_case()
+# parameters = update_parameters(parameters, grads, 0.1)
+#
+# print ("W1 = "+ str(parameters["W1"]))
+# print ("b1 = "+ str(parameters["b1"]))
+# print ("W2 = "+ str(parameters["W2"]))
+# print ("b2 = "+ str(parameters["b2"]))
 
 
 def L_layer_model(X, Y, layers_dims, learning_rate=0.0075, num_iterations=3000, print_cost=False,isPlot=True):
@@ -344,6 +344,37 @@ def L_layer_model(X, Y, layers_dims, learning_rate=0.0075, num_iterations=3000, 
     return parameters
 
 
+def predict(X, y, parameters):
+    """
+    该函数用于预测L层神经网络的结果，当然也包含两层
+
+    参数：
+     X - 测试集
+     y - 标签
+     parameters - 训练模型的参数
+
+    返回：
+     p - 给定数据集X的预测
+    """
+
+    m = X.shape[1]
+    n = len(parameters) // 2 # 神经网络的层数
+    p = np.zeros((1,m))
+
+    #根据参数前向传播
+    probas, caches = L_model_forward(X, parameters)
+
+    for i in range(0, probas.shape[1]):
+        if probas[0,i] > 0.5:
+            p[0,i] = 1
+        else:
+            p[0,i] = 0
+
+    print("准确度为: "  + str(float(np.sum((p == y))/m)))
+
+    return p
+
+
 train_set_x_orig , train_set_y , test_set_x_orig , test_set_y , classes = lr_utils.load_dataset()
 
 train_x_flatten = train_set_x_orig.reshape(train_set_x_orig.shape[0], -1).T
@@ -356,3 +387,29 @@ test_y = test_set_y
 
 layers_dims = [12288, 20, 7, 5, 1] #  5-layer model
 parameters = L_layer_model(train_x, train_y, layers_dims, num_iterations = 2500, print_cost = True,isPlot=True)
+pred_train = predict(train_x, train_y, parameters) #训练集
+pred_test = predict(test_x, test_y, parameters) #测试集
+
+
+def print_mislabeled_images(classes, X, y, p):
+    """
+    绘制预测和实际不同的图像。
+        X - 数据集
+        y - 实际的标签
+        p - 预测
+    """
+    a = p + y
+    mislabeled_indices = np.asarray(np.where(a == 1))
+    plt.rcParams['figure.figsize'] = (40.0, 40.0) # set default size of plots
+    num_images = len(mislabeled_indices[0])
+    for i in range(num_images):
+        index = mislabeled_indices[1][i]
+
+        plt.subplot(2, num_images, i + 1)
+        plt.imshow(X[:,index].reshape(64,64,3), interpolation='nearest')
+        plt.axis('off')
+        plt.title("Prediction: " + classes[int(p[0,index])].decode("utf-8") + " \n Class: " + classes[y[0,index]].decode("utf-8"))
+        plt.show()
+
+print_mislabeled_images(classes, test_x, test_y, pred_test)
+
