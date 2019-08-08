@@ -162,7 +162,9 @@ def initialize_parameters_he(layers_dims):
 if __name__ == '__main__':
     train_X, train_Y, test_X, test_Y = init_utils.load_dataset(is_plot=False)
 
-    parameters = model(train_X, train_Y, initialization = "zeros",is_polt=True)
+    # parameters = model(train_X, train_Y, initialization = "zeros",is_polt=True)
+    # parameters = model(train_X, train_Y, initialization = "random",is_polt=True)
+    parameters = model(train_X, train_Y, initialization = "he",is_polt=True)
     print ("训练集:")
     predictions_train = init_utils.predict(train_X, train_Y, parameters)
     print ("测试集:")
