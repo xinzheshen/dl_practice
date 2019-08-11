@@ -233,9 +233,15 @@ def plot_decision_boundary(model, X, y):
     # Generate a grid of points with distance h between them
     xx, yy = np.meshgrid(np.arange(x_min, x_max, h), np.arange(y_min, y_max, h))
     # Predict the function value for the whole grid
+    # np.r_是按列连接两个矩阵，就是把两矩阵上下相加，要求列数相等。
+    # np.c_是按行连接两个矩阵，就是把两矩阵左右相加，要求行数相等。
+    # np.ravel()和np.flatten()两者的功能是一致的，将多维数组降为一维，但是两者的区别是返回拷贝还是返回视图，
+    # np.flatten(0返回一份拷贝，对拷贝所做修改不会影响原始矩阵，
+    # 而np.ravel()返回的是视图，修改时会影响原始矩阵
     Z = model(np.c_[xx.ravel(), yy.ravel()])
     Z = Z.reshape(xx.shape)
     # Plot the contour and training examples
+    # 等高线图
     plt.contourf(xx, yy, Z, cmap=plt.cm.Spectral)
     plt.ylabel('x2')
     plt.xlabel('x1')
