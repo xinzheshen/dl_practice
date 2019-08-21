@@ -1,4 +1,7 @@
+import sys
+tmp1 = sys.modules
 import numpy as np
+tmp2 = sys.modules
 
 a = np.arange(10)
 print(a)
