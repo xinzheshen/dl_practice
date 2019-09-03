@@ -189,7 +189,8 @@ def predict(sess, image_file, is_show_info=True, is_plot=True):
 
     #打印出已经绘制了边界框的图
     if is_plot:
-        output_image = scipy.misc.imread(os.path.join("out", image_file))
+        output_image = plt.imread(os.path.join("out", image_file))
+        # output_image = scipy.misc.imread(os.path.join("out", image_file))
         plt.imshow(output_image)
 
     return out_scores, out_boxes, out_classes

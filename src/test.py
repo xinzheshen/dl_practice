@@ -65,3 +65,10 @@ print("shape", a.shape)
 print(np.argmax(a, axis=0))
 print("--")
 print(np.argmax(a, axis=1))
+
+
+np.random.seed(0)
+p = np.array([0.1, 0.0, 0.7, 0.2])
+tmp = p.ravel()
+index = np.random.choice([0, 1, 2, 3], p=tmp)
+print("index", index)
