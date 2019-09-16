@@ -53,19 +53,19 @@ def initialize_parameters():
 
 def forward_propagation(X,parameters):
     """
-    实现前向传播
-    CONV2D -> RELU -> MAXPOOL -> CONV2D -> RELU -> MAXPOOL -> FLATTEN -> FULLYCONNECTED
+       实现前向传播
+       CONV2D -> RELU -> MAXPOOL -> CONV2D -> RELU -> MAXPOOL -> FLATTEN -> FULLYCONNECTED
 
-    参数：
-        X - 输入数据的placeholder，维度为(输入节点数量，样本数量)
-        parameters - 包含了“W1”和“W2”的python字典。
+       参数：
+           X - 输入数据的placeholder，维度为(输入节点数量，样本数量)
+           parameters - 包含了“W1”和“W2”的python字典。
 
-    返回：
-        Z3 - 最后一个LINEAR节点的输出
+       返回：
+           Z3 - 最后一个LINEAR节点的输出
 
-    """
-    W1 = parameters["W1"]
-    W2 = parameters["W2"]
+       """
+    W1 = parameters['W1']
+    W2 = parameters['W2']
 
     #Conv2d : 步伐：1，填充方式：“SAME”
     Z1 = tf.nn.conv2d(X,W1,strides=[1,1,1,1],padding="SAME")
@@ -86,6 +86,7 @@ def forward_propagation(X,parameters):
 
     #全连接层（FC）：使用没有非线性激活函数的全连接层
     Z3 = tf.contrib.layers.fully_connected(P,6,activation_fn=None)
+
     return Z3
 
 
@@ -223,20 +224,37 @@ if __name__ == '__main__':
     print("Y_test shape: " + str(Y_test.shape))
     conv_layers = {}
 
+    # 测试占位符
+    X , Y = create_placeholders(64,64,3,6)
+    print ("X = " + str(X))
+    print ("Y = " + str(Y))
+
+    # # 测试初始化
     # tf.reset_default_graph()
-    # np.random.seed(1)
     # with tf.Session() as sess_test:
-    #     X,Y = create_placeholders(64,64,3,6)
     #     parameters = initialize_parameters()
-    #     Z3 = forward_propagation(X,parameters)
-    #
     #     init = tf.global_variables_initializer()
     #     sess_test.run(init)
-    #
-    #     a = sess_test.run(Z3,{X: np.random.randn(2,64,64,3), Y: np.random.randn(2,6)})
-    #     print("Z3 = " + str(a))
+    #     print("W1 = " + str(parameters["W1"].eval()[1,1,1]))
+    #     print("W2 = " + str(parameters["W2"].eval()[1,1,1]))
     #
     #     sess_test.close()
+
+    # 测试前向计算
+    tf.reset_default_graph()
+    np.random.seed(1)
+    with tf.Session() as sess_test:
+        X,Y = create_placeholders(64,64,3,6)
+        parameters = initialize_parameters()
+        Z3 = forward_propagation(X,parameters)
+
+        init = tf.global_variables_initializer()
+        sess_test.run(init)
+
+        a = sess_test.run(Z3,{X: np.random.randn(2,64,64,3), Y: np.random.randn(2,6)})
+        print("Z3 = " + str(a))
+
+        sess_test.close()
 
     # tf.reset_default_graph()
     # with tf.Session() as sess_test:
@@ -253,4 +271,4 @@ if __name__ == '__main__':
     #
     #     sess_test.close()
 
-    _, _, parameters = model(X_train, Y_train, X_test, Y_test, num_epochs=150)
+    # _, _, parameters = model(X_train, Y_train, X_test, Y_test, num_epochs=150)
