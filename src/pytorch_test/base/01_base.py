@@ -8,6 +8,8 @@ print("Tensors -------------")
 x = torch.empty(5, 3)
 print(x)
 
+tmp = torch.randn(16, 1, 8)
+print('tmp', tmp)
 ## Construct a randomly initialized matrix:
 x = torch.rand(5, 3)
 print(x)
